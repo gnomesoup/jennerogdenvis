@@ -1,0 +1,24 @@
+---
+title: "Jenner-Ogden Data Visualization"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r boundaries, echo=F}
+library(rgdal);library(ggplot2)
+bound <- readOGR("./Boundaries", "CPS_Elementary_School_Attendance_Boundaries_SY1415")
+bound <- spTransform(bound, CRS("+proj=longlat +datum=WGS84"))
+bound <- fortify(bound)
+```
+
+
+```{r, echo=FALSE}
+library(ggmap)
+map <- get_map(location=c(lon = -87.638, lat = 41.895), zoom = 14, maptype="roadmap")
+chi <- ggmap(map)
+eMap <- chi + geom_polygon(aes(x=long, y=lat, group=group), fill=grey, size = 2, color='black', data=bound, alpha=0)
+eMap
+```
+

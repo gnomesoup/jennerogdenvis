@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1443462136876.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "AF95455F",
+    "lastKnownWriteTime" : 31525678432190511,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "bound",
+        "contentUrl" : "content?title=bound&file=2ee034727b5b428d89466450e3fb79f0.htm",
+        "displayedObservations" : 1000,
+        "displayedVariables" : 7,
+        "totalObservations" : 103422,
+        "variables" : 7
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}
