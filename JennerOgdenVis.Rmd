@@ -7,18 +7,35 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 ```{r boundaries, echo=F}
-library(rgdal);library(ggplot2)
+library(rgdal);library(ggplot2); library(dplyr)
 bound <- readOGR("./Boundaries", "CPS_Elementary_School_Attendance_Boundaries_SY1415")
 bound <- spTransform(bound, CRS("+proj=longlat +datum=WGS84"))
-bound <- fortify(bound)
+schools <- data.frame(SchoolName = bound$SchoolName, SchoolID = bound$SchoolID, SchoolAddr = bound$SchoolAddr)
+boundplot <- fortify(bound)
+ogdenIndex <- grep("OGDEN", schools$SchoolName) - 1
+jennerIndex <- grep("JENNER", schools$SchoolName) - 1
+ogden <- boundplot %>% filter(id == ogdenIndex)
+jenner <- boundplot %>% filter(id == jennerIndex)
 ```
 
-
 ```{r, echo=FALSE}
-library(ggmap)
+library(ggmap); library(wesanderson)
 map <- get_map(location=c(lon = -87.638, lat = 41.895), zoom = 14, maptype="roadmap")
 chi <- ggmap(map)
-eMap <- chi + geom_polygon(aes(x=long, y=lat, group=group), fill=grey, size = 2, color='black', data=bound, alpha=0)
+eMap <- chi + geom_polygon(aes(x=as.nulong, y=lat, group=group), fill=grey, size = 2, color='black', data=bound, alpha=0)
 eMap
+```
+
+```{r}
+library(ggplot2); library(wesanderson)
+p <- ggplot(rbind(ogden, jenner)) + geom_polygon(aes(x=long, y=lat, group=group, fill=id), color='black', size=1)
+p <- p + scale_fill_manual(values = wes_palette("Moonrise3")) + coord_fixed(1)
+p
+```
+
+```{r crime, echo=FALSE}
+library(readr)
+dir.create("crime", showWarnings=F)
+crime <- read.csv("./crime/Crimes_-_2001_to_present.csv")
 ```
 
