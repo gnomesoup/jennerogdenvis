@@ -15,7 +15,15 @@ boundplot <- fortify(bound)
 ogdenIndex <- grep("OGDEN", schools$SchoolName) - 1
 jennerIndex <- grep("JENNER", schools$SchoolName) - 1
 ogden <- boundplot %>% filter(id == ogdenIndex)
+ogden$SchoolName <- "Ogden"
 jenner <- boundplot %>% filter(id == jennerIndex)
+jenner$SchoolName <- "Jenner"
+jenog <- rbind(ogden, jenner)
+x <- c(min(jenog$long), max(jenog$long))
+y <- c(min(jenog$lat), max(jenog$lat))
+schoolLoc <- data.frame(SchoolName = c("Jenner", "Ogden East", "Ogden West"),
+                        long = c(-87.640825, -87.629096, -87.660443),
+                        lat = c(41.902122, 41.900282, 41.891817))
 ```
 
 ```{r, echo=FALSE}
@@ -28,14 +36,25 @@ eMap
 
 ```{r}
 library(ggplot2); library(wesanderson)
-p <- ggplot(rbind(ogden, jenner)) + geom_polygon(aes(x=long, y=lat, group=group, fill=id), color='black', size=1)
-p <- p + scale_fill_manual(values = wes_palette("Moonrise3")) + coord_fixed(1)
+pal <- wes_palette("Moonrise3")
+p <- ggplot(rbind(ogden, jenner)) + 
+  aes(long, lat, group=group, fill=SchoolName) + 
+  geom_polygon() + geom_path (color = 'white', size = 1) +
+  scale_fill_manual(values = pal) + 
+  coord_fixed(ratio=1) +
+  theme(aspect.ratio = 1) +
+  geom_point(data=schoolLoc, aes(long, lat), size = 5,
+                    colour = pal[3], inherit.aes=F, show_guide=F)
+schoolLoc$labels <- paste0("  ", schoolLoc$SchoolName)
+p <- p + geom_text(data=schoolLoc, aes(long,lat,label=labels),
+                   hjust=0, angle=0, show_guide=FALSE, inherit.aes=F)
 p
 ```
 
 ```{r crime, echo=FALSE}
-library(readr)
+library(readr); library(lubridate)
 dir.create("crime", showWarnings=F)
 crime <- read.csv("./crime/Crimes_-_2001_to_present.csv")
+crime <- crime %>% filter(Year == "2015") %>% filter(!is.na(Latitude))
 ```
 
