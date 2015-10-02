@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1443723492375.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "549C4667",
+    "lastKnownWriteTime" : 27866499440181295,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "6gw3il8nxk",
+        "caption" : "boundplot",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=boundplot&cache_key=6gw3il8nxk",
+        "displayedObservations" : "103422",
+        "environment" : "",
+        "object" : "boundplot",
+        "totalObservations" : "103422",
+        "variables" : "7"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1443810802114.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "916D6477",
+    "lastKnownWriteTime" : 0,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "h2fs3n9vp1",
+        "caption" : "wwaysplot",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=wwaysplot&cache_key=h2fs3n9vp1",
+        "displayedObservations" : 67264,
+        "environment" : "",
+        "object" : "wwaysplot",
+        "totalObservations" : 67264,
+        "variables" : 7
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

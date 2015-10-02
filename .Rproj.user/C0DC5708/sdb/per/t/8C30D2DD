@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1443722318534.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8C30D2DD",
+    "lastKnownWriteTime" : 27866499440181295,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "r3gtjn397s",
+        "caption" : "crime",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=crime&cache_key=r3gtjn397s",
+        "displayedObservations" : "1000",
+        "environment" : "",
+        "object" : "crime",
+        "totalObservations" : "1000",
+        "variables" : "17"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

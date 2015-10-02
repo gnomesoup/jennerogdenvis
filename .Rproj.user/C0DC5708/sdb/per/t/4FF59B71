@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1443815170090.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "4FF59B71",
+    "lastKnownWriteTime" : 7011605692497750387,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "wna572q36d",
+        "caption" : "head(filter(crime, PRIMARY.DESCRIPTION == \"SEX OFFENSE\"))",
+        "contentUrl" : "grid_resource/gridviewer.html?env=_rs_no_env&obj=&cache_key=wna572q36d",
+        "displayedObservations" : 2,
+        "environment" : "_rs_no_env",
+        "object" : "",
+        "totalObservations" : 2,
+        "variables" : 17
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}
