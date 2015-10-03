@@ -18,7 +18,9 @@ jenogplot <- fortify(jenog)
 # ylim <- as.numeric(bbox(jenog)[2,])
 
 lims <- bbox(jenog) %>% as.data.frame %>% mutate(mean = rowMeans(.), span = (max-min)/2)
-
+x <- max(lims$span)
+xlim <- lims$mean[1] + c(x * -1, x)
+ylim <- lims$mean[2] + c(x * -1, x)
 schoolLoc <- data.frame(SchoolName = c("Jenner", "Ogden East", "Ogden West"),
                         long = c(-87.640825, -87.629096, -87.660443),
                         lat = c(41.902122, 41.900282, 41.891817))
