@@ -14,10 +14,11 @@ schools <- data.frame(SchoolName = bound$SchoolName, SchoolID = bound$SchoolID, 
 boundplot <- fortify(bound)
 jenog <- subset(bound, bound$SchoolName == "OGDEN" | bound$SchoolName == "JENNER")
 jenogplot <- fortify(jenog)
-# xlim <- as.numeric(bbox(jenog)[1,])
-# ylim <- as.numeric(bbox(jenog)[2,])
 
 lims <- bbox(jenog) %>% as.data.frame %>% mutate(mean = rowMeans(.), span = (max-min)/2)
+span <- max(lims$span)
+xlim <- c(lims$mean[1] - span, lims$mean[1] + span)
+ylim <- c(lims$mean[2] - span, lims$mean[2] + span)
 
 schoolLoc <- data.frame(SchoolName = c("Jenner", "Ogden East", "Ogden West"),
                         long = c(-87.640825, -87.629096, -87.660443),
@@ -34,10 +35,10 @@ wwaysplot <- fortify(wways)
 
 ```{r, echo=FALSE}
 library(ggmap); library(wesanderson)
-map <- get_map(location=c(lon = -87.638, lat = 41.895), zoom = 14, maptype="roadmap")
-chi <- ggmap(map)
-eMap <- chi + geom_polygon(aes(x=as.nulong, y=lat, group=group), fill=grey, size = 2, color='black', data=bound, alpha=0)
-eMap
+# map <- get_map(location=c(lon = -87.638, lat = 41.895), zoom = 14, maptype="roadmap")
+# chi <- ggmap(map)
+# eMap <- chi + geom_polygon(aes(x=as.nulong, y=lat, group=group), fill=grey, size = 2, color='black', data=bound, alpha=0)
+# eMap
 ```
 
 ```{r}
@@ -52,7 +53,6 @@ p <- ggplot(boundplot) +
   geom_polygon(data=jenogplot, aes(long, lat, group=group, fill=id)) +
   geom_polygon(data=wwaysplot, aes(long, lat, group=group), fill=pal[1]) +
   geom_path(colour="white", size=1) + 
-  scale_fill_manual(values=c(pal[2], pal[5])) + 
   coord_cartesian(xlim=xlim + buffer, ylim=ylim + buffer)
 pSchools <- p + geom_point(data=schoolLoc, aes(long, lat), inherit.aes=F, size=4, colour=pal[3]) +
   geom_text(data=schoolLoc, aes(long, lat, label=paste0("  ", SchoolName)), eval=T, hjust=0, inherit.aes=F)
@@ -64,9 +64,31 @@ library(readr); library(lubridate); library(curl); library(dplyr); library(RSocr
 dir.create("crime", showWarnings=F)
 # crime <- read.socrata("https://data.cityofchicago.org/resource/x2n5-8w5q.json") #download latest crime 
 crime <- read_csv("./crime/Crimes_-_One_year_prior_to_present.csv") #load it to an object
-crime <- crime %>% filter(!is.na("LATITUDE")) #make sure we have all locations
 names(crime)[13:14] <- c("long", "lat")
-p + geom_point(data=crime, aes(group=1), size = 1, alpha = '.8', colour = 'red') +
-  stat_density2d(data=crime, aes(group=1), color = 'red')
+crime <- crime %>% filter(!is.na(long)) #make sure we have all locations
+names(crime)[5:6] <- c("primary", "secondary")
+crime.xy <- crime %>% select(long, lat) %>% as.data.frame()
+coordinates(crime.xy) <- ~long + lat
+proj4string(crime.xy) <- proj4string(bound)
+crime.xy <- crime.xy %over% bound
+crime <- cbind(crime, select(crime.xy, OBJECTID, SchoolName))
+crimeTypes <- unique(crime$primary)
+```
+
+```{r}
+library(grid)
+crimeplot <- function(fplot, data, ctype, cschool) {
+  thisData <- data %>% filter(SchoolName %in% cschool, primary == ctype)
+  myGrob <- grobTree(textGrob(ctype, x=0.1, y = 0.99, hjust=0, gp=gpar(col='black', fontsize=15)))
+  fplot + geom_point(data=thisData, aes(group=1), size = 4, alpha = .03, colour = 'red') + 
+     annotation_custom(myGrob)
+}
+pSchools + geom_point(data=crime, aes(group=1), size = 4, alpha = .03, colour = 'red') #+
+  # stat_density2d(data=crime, aes(group=1), color = 'red')
+```
+
+```{r}
+pSchools + stat_density2d(data=crime, geom="tile", aes(x = long, y = lat, fill= ..level..), inherit.aes=F, countour=F) +
+  scale_fill_gradient(low = "orange", high="red")
 ```
 

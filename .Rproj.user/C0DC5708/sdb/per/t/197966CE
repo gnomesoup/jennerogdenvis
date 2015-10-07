@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1444058893707.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "197966CE",
+    "lastKnownWriteTime" : 7011605692497750387,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "5avyb7tliy",
+        "caption" : "lims",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=lims&cache_key=5avyb7tliy",
+        "displayedObservations" : "2",
+        "environment" : "",
+        "object" : "lims",
+        "totalObservations" : "2",
+        "variables" : "4"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

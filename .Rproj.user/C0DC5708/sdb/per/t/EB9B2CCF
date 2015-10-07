@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1444059270274.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "EB9B2CCF",
+    "lastKnownWriteTime" : 7011605692497750387,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "zyj4721t1e",
+        "caption" : "jenogplot",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=jenogplot&cache_key=zyj4721t1e",
+        "displayedObservations" : 1653,
+        "environment" : "",
+        "object" : "jenogplot",
+        "totalObservations" : 1653,
+        "variables" : 7
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

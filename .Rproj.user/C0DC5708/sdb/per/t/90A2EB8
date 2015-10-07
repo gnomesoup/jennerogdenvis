@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1444251296169.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "90A2EB8",
+    "lastKnownWriteTime" : 7011605690644955137,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "qb1fav4spd",
+        "caption" : "crime.xy",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=crime.xy&cache_key=qb1fav4spd",
+        "displayedObservations" : "254564",
+        "environment" : "",
+        "object" : "crime.xy",
+        "totalObservations" : "254564",
+        "variables" : "10"
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

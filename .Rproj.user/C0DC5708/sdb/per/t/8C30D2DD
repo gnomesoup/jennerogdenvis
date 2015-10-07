@@ -10,14 +10,14 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "r3gtjn397s",
+        "cacheKey" : "2vpyqiijor",
         "caption" : "crime",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=crime&cache_key=r3gtjn397s",
-        "displayedObservations" : "1000",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=crime&cache_key=2vpyqiijor",
+        "displayedObservations" : "254564",
         "environment" : "",
         "object" : "crime",
-        "totalObservations" : "1000",
-        "variables" : "17"
+        "totalObservations" : "254564",
+        "variables" : "19"
     },
     "relative_order" : 5,
     "source_on_save" : false,
