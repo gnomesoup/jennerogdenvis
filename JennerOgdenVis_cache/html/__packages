@@ -1,0 +1,12 @@
+base
+sp
+rgdal
+ggplot2
+dplyr
+ggmap
+wesanderson
+readr
+lubridate
+curl
+RSocrata
+rgeos

@@ -10,14 +10,14 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "f2et92860x",
+        "cacheKey" : "gr4gyvb94w",
         "caption" : "schools",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=schools&cache_key=f2et92860x",
-        "displayedObservations" : 359,
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=schools&cache_key=gr4gyvb94w",
+        "displayedObservations" : "359",
         "environment" : "",
         "object" : "schools",
-        "totalObservations" : 359,
-        "variables" : 3
+        "totalObservations" : "359",
+        "variables" : "3"
     },
     "relative_order" : 8,
     "source_on_save" : false,

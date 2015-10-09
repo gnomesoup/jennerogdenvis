@@ -6,8 +6,16 @@ output: html_document
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-```{r boundaries, echo=F}
-library(rgdal);library(ggplot2); library(dplyr)
+
+```{r}
+library(rgdal); library(ggplot2); library(dplyr)
+library(ggmap); library(wesanderson)
+library(readr); library(lubridate); library(curl)
+library(grid); library(rgeos)
+```
+
+
+```{r boundaries, echo=F, cache=TRUE}
 bound <- readOGR("./Boundaries", "CPS_Elementary_School_Attendance_Boundaries_SY1415")
 # bound <- spTransform(bound, CRS("+proj=longlat +datum=WGS84"))
 schools <- data.frame(SchoolName = bound$SchoolName, SchoolID = bound$SchoolID, SchoolAddr = bound$SchoolAddr)
@@ -15,11 +23,13 @@ boundplot <- fortify(bound)
 jenog <- subset(bound, bound$SchoolName == "OGDEN" | bound$SchoolName == "JENNER")
 jenogplot <- fortify(jenog)
 
-lims <- bbox(jenog) %>% as.data.frame %>% mutate(mean = rowMeans(.), span = (max-min)/2)
+lims <- bbox(jenog) %>% as.data.frame() %>% mutate(mean = rowMeans(.), span = (max-min)/2)
 span <- max(lims$span)
 xlim <- c(lims$mean[1] - span, lims$mean[1] + span)
 ylim <- c(lims$mean[2] - span, lims$mean[2] + span)
-
+x <- max(lims$span)
+xlim <- lims$mean[1] + c(x * -1, x)
+ylim <- lims$mean[2] + c(x * -1, x)
 schoolLoc <- data.frame(SchoolName = c("Jenner", "Ogden East", "Ogden West"),
                         long = c(-87.640825, -87.629096, -87.660443),
                         lat = c(41.902122, 41.900282, 41.891817))
@@ -28,7 +38,7 @@ df <- spTransform(df, bound@proj4string)
 df <- coordinates(df)
 schoolLoc$long <- df[,1]
 schoolLoc$lat <- df[,2]
-
+areas <- gArea(jenog) * 2.29568e-5 #find the acreage of the school district
 wways <- readOGR("./Waterways", "Hydro")
 wwaysplot <- fortify(wways)
 ```
@@ -41,8 +51,7 @@ library(ggmap); library(wesanderson)
 # eMap
 ```
 
-```{r}
-library(ggplot2); library(wesanderson); library(ggmap)
+```{r, cache=T}
 pal <- wes_palette("Moonrise3")
 buffer <- c(-800, 800)
 p <- ggplot(boundplot) + 
@@ -51,6 +60,7 @@ p <- ggplot(boundplot) +
   coord_fixed() + 
   theme_nothing() + theme(aspect.ratio=1) +
   geom_polygon(data=jenogplot, aes(long, lat, group=group, fill=id)) +
+  scale_fill_manual(values=pal[c(2,5)]) +
   geom_polygon(data=wwaysplot, aes(long, lat, group=group), fill=pal[1]) +
   geom_path(colour="white", size=1) + 
   coord_cartesian(xlim=xlim + buffer, ylim=ylim + buffer)
@@ -59,8 +69,8 @@ pSchools <- p + geom_point(data=schoolLoc, aes(long, lat), inherit.aes=F, size=4
 pSchools
 ```
 
-```{r crime, echo=FALSE}
-library(readr); library(lubridate); library(curl); library(dplyr); library(RSocrata)
+```{r crime, echo=FALSE, cache=TRUE}
+library(RSocrata)
 dir.create("crime", showWarnings=F)
 # crime <- read.socrata("https://data.cityofchicago.org/resource/x2n5-8w5q.json") #download latest crime 
 crime <- read_csv("./crime/Crimes_-_One_year_prior_to_present.csv") #load it to an object
@@ -72,23 +82,33 @@ coordinates(crime.xy) <- ~long + lat
 proj4string(crime.xy) <- proj4string(bound)
 crime.xy <- crime.xy %over% bound
 crime <- cbind(crime, select(crime.xy, OBJECTID, SchoolName))
-crimeTypes <- unique(crime$primary)
+crime.sum <- crime %>% filter(SchoolName %in% c("OGDEN", "JENNER")) %>% 
+  group_by(SchoolName, primary, secondary) %>% 
+  summarize(count = n()) %>% mutate(countA = ifelse(SchoolName == "OGDEN", count/7.05, count/1.96))
+crimeTypes <- unique(crime.sum$primary)
+crimeIndex <- c("ARSON", "ASSAULT", "BATTERY", "BURGLARY", "CRIM SEXUAL ASSAULT",
+                "HOMICIDE", "MOTOR VEHICLE THEFT", "OFFENSE INVOLVING CHILDREN")
+
 ```
 
-```{r}
+```{r, cache=TRUE}
 library(grid)
-crimeplot <- function(fplot, data, ctype, cschool) {
-  thisData <- data %>% filter(SchoolName %in% cschool, primary == ctype)
-  myGrob <- grobTree(textGrob(ctype, x=0.1, y = 0.99, hjust=0, gp=gpar(col='black', fontsize=15)))
-  fplot + geom_point(data=thisData, aes(group=1), size = 4, alpha = .03, colour = 'red') + 
+thisData = crime %>% filter(primary %in% crimeIndex)
+myGrob <- grobTree(textGrob("Index Crimes", x=0.1, y = 0.1, hjust=0, gp=gpar(col='black', fontsize=25)))
+thisP <- p + geom_point(data=thisData, aes(group=1), size = 4, alpha = .03, colour = 'red') + 
      annotation_custom(myGrob)
-}
-pSchools + geom_point(data=crime, aes(group=1), size = 4, alpha = .03, colour = 'red') #+
+print(thisP)
   # stat_density2d(data=crime, aes(group=1), color = 'red')
 ```
 
 ```{r}
-pSchools + stat_density2d(data=crime, geom="tile", aes(x = long, y = lat, fill= ..level..), inherit.aes=F, countour=F) +
-  scale_fill_gradient(low = "orange", high="red")
+for(i in 1:length(crimeIndex)) {
+  thisData <- crime %>% filter(SchoolName %in% c("OGDEN", "JENNER"), primary == crimeIndex[i])
+  myGrob <- grobTree(textGrob(crimeTypes[i], x=0.1, y = 0.1, hjust=0, gp=gpar(col='black', fontsize=25)))
+  thisP <- p + geom_point(data=thisData, aes(group=1), size = 4, alpha = .03, colour = 'red') + 
+     annotation_custom(myGrob)
+  print(thisP)
+}
+
 ```
 
